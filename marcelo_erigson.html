@@ -1,0 +1,3306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Treino — Marcelo Erigson</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F5F5;--card:#fff;--accent:#C4854A;--accent-light:#F0EBE3;--text:#1A1A1A;--text2:#6B6B6B;--border:#E5E3DE;--radius:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;overflow-x:hidden}
+.wrap{padding:0 0 80px}
+.header{padding:28px 20px 18px;text-align:center}
+.header-label{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:4px;color:var(--accent);margin-bottom:4px}
+.header-name{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1;color:var(--text)}
+.header-meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+.meta-chip{display:flex;align-items:center;gap:6px;background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text2)}
+.meta-chip span{color:var(--accent);font-weight:500}
+.tab-scroll{display:flex;gap:8px;padding:0 20px 14px;overflow-x:auto;scrollbar-width:none}
+.tab-scroll::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;padding:6px 16px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text2);font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;cursor:pointer;transition:all .2s ease}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.treino-block{display:none;padding:0 12px}
+.treino-block.active{display:block;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.block-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:12px 14px;border-radius:var(--radius);background:var(--card);border:0.5px solid var(--border)}
+.block-letter{font-family:'Bebas Neue',sans-serif;font-size:38px;line-height:1;color:var(--accent)}
+.block-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;color:var(--text)}
+.block-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.ex-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;transition:opacity .3s ease}
+.ex-card.done{opacity:.35}
+.ex-card.done .ex-name{text-decoration:line-through;color:var(--text2)}
+.check-area{padding:0 4px 0 10px;display:flex;align-items:center}
+.ex-check{width:17px;height:17px;accent-color:var(--accent);cursor:pointer}
+.ex-card.biset{border-left:3px solid #5B8ED6}
+.ex-card.triset{border-left:3px solid #4CAF85}
+.ex-card.superset{border-left:3px solid #C4854A}
+.ex-card.circuito{border-left:3px solid #9B72CF}
+.ex-main{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--accent-light);border-radius:var(--radius) var(--radius) 0 0}
+.ex-num{font-family:'Bebas Neue',sans-serif;font-size:21px;color:var(--accent);min-width:24px;line-height:1}
+.ex-name{flex:1;font-size:14px;font-weight:500;line-height:1.3;color:var(--text)}
+.ex-muscle{font-size:10px;color:var(--accent);background:rgba(196,133,74,.12);border-radius:8px;padding:3px 8px;white-space:nowrap}
+.ex-sistema{padding:5px 13px;border-top:0.5px solid var(--border)}
+.metodo-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:.5px;padding:3px 9px;border-radius:20px;text-transform:uppercase}
+.metodo-badge.biset{background:#EEF4FF;color:#2B5FC2;border:0.5px solid #C2D4F5}
+.metodo-badge.triset{background:#EEF9F4;color:#1E7A52;border:0.5px solid #B8E5CE}
+.metodo-badge.superset{background:var(--accent-light);color:#8A5020;border:0.5px solid #DDB99A}
+.metodo-badge.circuito{background:#F5F0FF;color:#6B3FAD;border:0.5px solid #CDBFED}
+.ex-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:0.5px solid var(--border)}
+.stat{padding:10px 0;text-align:center;border-right:0.5px solid var(--border);cursor:pointer}
+.stat:last-child{border-right:none}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1;color:var(--text)}
+.carga-input{width:56px;background:#F9F7F5;border:0.5px solid var(--border);border-radius:7px;color:var(--text);text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1;padding:4px 2px;outline:none}
+.carga-input:focus{border-color:var(--accent)}
+.hist-carga{font-size:9px;color:var(--text2);margin-top:3px;min-height:12px}
+.hist-carga.up{color:#2E7D52}
+.hist-carga.down{color:#B83232}
+.stat-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.ex-obs{padding:8px 13px;font-size:13px;color:#8A5020;border-top:0.5px solid var(--border);background:#FDFAF7}
+#timer-float{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:8px 12px 8px 28px;border-radius:28px;font-family:'Bebas Neue',sans-serif;font-size:22px;z-index:9999;display:none;align-items:center;gap:14px}
+#btn-pular-descanso{background:rgba(255,255,255,.25);color:#fff;border:none;border-radius:20px;padding:5px 14px;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer}
+#btn-pular-descanso:active{background:rgba(255,255,255,.4)}
+.finish-screen{margin-top:16px;padding:22px 18px;background:var(--card);border:0.5px solid var(--border);border-top:2px solid var(--accent);border-radius:var(--radius);text-align:center;animation:fadeUp .4s ease}
+.finish-msg{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--accent)}
+.finish-sub{font-size:12px;color:var(--text2);margin:8px 0 14px;line-height:1.6}
+.finish-btn{display:block;width:100%;padding:13px;margin-bottom:10px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer}
+.wpp-btn{display:block;width:100%;padding:13px;background:#25D366;color:#fff;border:none;border-radius:9px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer}
+.section{display:none}
+.section.active{display:block;animation:fadeUp .25s ease}
+.aer-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);margin:0 12px 10px;overflow:hidden}
+.aer-header{display:flex;align-items:center;padding:11px 13px;border-bottom:0.5px solid var(--border);background:var(--accent-light)}
+.aer-dia{font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--accent);width:64px;flex-shrink:0}
+.aer-modal{flex:1;font-size:14px;font-weight:700;color:var(--text);text-align:center}
+.aer-spacer{width:64px;flex-shrink:0}
+.aer-stats{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border-bottom:0.5px solid var(--border)}
+.aer-stat{padding:10px 0;text-align:center;border-right:0.5px solid var(--border)}
+.aer-stat:last-child{border-right:none}
+.aer-val{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;color:var(--text);white-space:nowrap}
+.aer-sep{color:var(--accent);margin:0 3px}
+.aer-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.vol-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);margin:0 12px 10px;padding:13px}
+.vol-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.vol-muscle{font-size:13px;font-weight:500;color:var(--text)}
+.vol-diff{font-family:'Bebas Neue',sans-serif;font-size:13px;padding:2px 8px;border-radius:7px}
+.vol-diff.up{color:#2E7D52;background:#EDF7F1}
+.vol-diff.down{color:#B83232;background:#FDEAEA}
+.vol-diff.neutral{color:var(--text2);background:#F0EFED}
+.vol-bars{display:flex;flex-direction:column;gap:6px}
+.vol-row{display:flex;align-items:center;gap:8px}
+.vol-label{font-size:10px;color:var(--text2);width:52px;flex-shrink:0}
+.vol-bar-bg{flex:1;height:7px;background:#EEE;border-radius:4px;overflow:hidden}
+.vol-bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.vol-bar-fill.ant{background:#C4854A}
+.vol-bar-fill.atu{background:#8A5020}
+.vol-num{font-family:'Bebas Neue',sans-serif;font-size:13px;width:22px;text-align:right;flex-shrink:0;color:var(--text)}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-top:0.5px solid var(--border);display:flex;z-index:100}
+.nav-btn{flex:1;padding:12px 0 16px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border:none;background:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;transition:color .2s}
+.nav-btn.active{color:var(--accent)}
+.nav-icon{font-size:20px}
+.empty-msg{text-align:center;padding:40px 20px;color:var(--text2);font-size:13px;font-style:italic}
+.footer{text-align:center;padding:20px;font-size:11px;color:var(--text2)}
+.btn-video{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;background:var(--accent-light);border:0.5px solid var(--border);font-size:15px;text-decoration:none;flex-shrink:0;transition:background .2s}
+.btn-video:hover{background:#E5DDD4}
+
+.btn-iniciar-treino {
+  padding:6px 14px; border-radius:20px; border:0.5px solid #DDB99A;
+  background:var(--accent-light); color:var(--accent);
+  font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:1px;
+  cursor:pointer; white-space:nowrap; transition:all .2s; flex-shrink:0;
+  margin-left:auto;
+}
+.btn-iniciar-treino:hover { background:#E5DDD4 }
+
+#treino-timer {
+  position:fixed; top:14px; left:50%; transform:translateX(-50%);
+  z-index:190; background:var(--accent); border-radius:28px;
+  padding:5px 18px; font-family:'Bebas Neue',sans-serif; font-size:18px;
+  color:#fff; display:none; pointer-events:none;
+}
+
+.feedback-row { display:flex; gap:8px; justify-content:center; margin:8px 0 }
+.feedback-btn {
+  flex:1; padding:10px 0; border-radius:10px; border:0.5px solid var(--border);
+  background:var(--bg); font-size:20px; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:4px; transition:all .2s;
+}
+.feedback-btn span { font-size:10px; font-family:'DM Sans',sans-serif; color:var(--text2) }
+.feedback-btn.selected { border-color:var(--accent); background:var(--accent-light) }
+
+.grafico-modal {
+  display:none; position:fixed; inset:0; z-index:9998;
+  background:rgba(0,0,0,.4); align-items:center; justify-content:center;
+}
+.grafico-modal.open { display:flex }
+.grafico-box {
+  background:var(--card); border:0.5px solid var(--border);
+  border-radius:var(--radius); padding:20px; width:90%; max-width:360px;
+}
+.grafico-title { font-family:'Bebas Neue',sans-serif; font-size:15px; margin-bottom:12px; color:var(--accent) }
+.grafico-close { float:right; cursor:pointer; color:var(--text2); font-size:18px; line-height:1 }
+.grafico-bars { display:flex; align-items:flex-end; gap:6px; height:90px; margin-bottom:8px }
+.grafico-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px }
+.grafico-bar { width:100%; background:var(--accent); border-radius:3px 3px 0 0; min-height:4px; transition:height .4s ease }
+.grafico-val { font-family:'Bebas Neue',sans-serif; font-size:11px; color:var(--accent) }
+.grafico-date { font-size:8px; color:var(--text2); text-align:center; word-break:break-all }
+.grafico-empty { text-align:center; color:var(--text2); font-size:12px; padding:20px 0; font-style:italic }
+.btn-grafico { font-size:10px; color:var(--text2); background:none; border:none; cursor:pointer; padding:0; text-decoration:underline; margin-top:2px }
+
+.ex-card.done .ex-stats,
+.ex-card.done .piramide-table,
+.ex-card.done .ex-sistema,
+.ex-card.done .ex-obs,
+.ex-card.done .hist-carga { display:none }
+.ex-card.done .ex-main { opacity:.5 }
+.ex-card.done { border-left:3px solid var(--accent) !important }
+
+.tec-card { background:var(--card); border:0.5px solid var(--border); border-radius:var(--radius); margin:0 12px 10px; padding:14px }
+.tec-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:10px }
+.tec-nome { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:.5px; flex:1; color:var(--text) }
+.tec-badge { font-size:10px; font-weight:600; padding:4px 10px; border-radius:20px; white-space:nowrap }
+.tec-desc { font-size:13px; color:var(--text2); line-height:1.6 }
+
+.metodo-badge.biset    { background:#EEF4FF; color:#2B5FC2; border:0.5px solid #C2D4F5 }
+.metodo-badge.triset   { background:#EEF9F4; color:#1E7A52; border:0.5px solid #B8E5CE }
+.metodo-badge.superset { background:var(--accent-light); color:#8A5020; border:0.5px solid #DDB99A }
+.metodo-badge.circuito { background:#F5F0FF; color:#6B3FAD; border:0.5px solid #CDBFED }
+
+.share-btn { display:block; width:100%; padding:12px; margin-top:8px; background:var(--bg); color:var(--text); border:0.5px solid var(--border); border-radius:9px; font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:1px; cursor:pointer }
+
+.theme-toggle {
+  position:fixed; top:14px; right:14px; z-index:200;
+  width:34px; height:34px; border-radius:50%;
+  background:var(--card); border:0.5px solid var(--border);
+  font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+
+.progress-bar-wrap { height:3px; background:var(--border); margin:0 12px 10px; border-radius:2px; overflow:hidden }
+.progress-bar-fill { height:100%; border-radius:2px; background:var(--accent); transition:width .4s ease }
+
+.series-dot { width:7px; height:7px; border-radius:50%; background:var(--border); transition:background .2s }
+.series-dot.done { background:var(--accent) }
+
+.nota-wrap { padding:12px; border-top:0.5px solid var(--border) }
+.nota-wrap textarea { width:100%; background:var(--bg); border:0.5px solid var(--border); border-radius:9px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; padding:10px 12px; resize:none; outline:none; min-height:65px }
+.nota-wrap textarea::placeholder { color:var(--text2) }
+.nota-lbl { font-size:10px; color:var(--text2); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px }
+.last-date { font-size:11px; color:var(--text2); margin-top:3px; font-style:italic }
+
+#offline-banner { display:none; position:fixed; top:0; left:0; right:0; z-index:999; background:#B83232; color:#fff; text-align:center; font-size:12px; padding:6px }
+
+#login-screen {
+  position:fixed; inset:0; z-index:9999;
+  background:var(--bg); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:30px;
+}
+#login-screen.hidden { display:none }
+.login-logo { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--accent); margin-bottom:4px; letter-spacing:2px }
+.login-sub { font-size:13px; color:var(--text2); margin-bottom:32px }
+.login-input {
+  width:100%; padding:13px 15px; margin-bottom:12px;
+  background:var(--card); border:0.5px solid var(--border);
+  border-radius:10px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:15px; outline:none;
+}
+.login-input:focus { border-color:var(--accent) }
+.login-input::placeholder { color:var(--text2) }
+.login-btn { width:100%; padding:14px; background:var(--accent); border:none; border-radius:10px; color:#fff; font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:1px; cursor:pointer; margin-top:4px; transition:background .2s }
+.login-btn:hover { background:#B3743E }
+.login-btn:disabled { background:#C8B8A8; cursor:not-allowed }
+.login-error { color:#B83232; font-size:13px; margin-top:8px; text-align:center; min-height:18px }
+.logout-btn { background:none; border:none; color:var(--text2); font-size:11px; cursor:pointer; text-decoration:underline; padding:4px 0 }
+
+.vol-card-prio { border-left:2px solid var(--accent) !important }
+.vol-prio-badge { font-size:10px; font-weight:600; color:#8A5020; background:var(--accent-light); border-radius:20px; padding:3px 9px; white-space:nowrap }
+
+.piramide-table { width:100%; border-top:0.5px solid var(--border) }
+.piramide-header { display:grid; grid-template-columns:44px 1fr 1fr 36px; padding:5px 13px; border-bottom:0.5px solid var(--border) }
+.piramide-header span { font-size:9px; text-transform:uppercase; letter-spacing:.5px; color:var(--text2); text-align:center }
+.piramide-row { display:grid; grid-template-columns:44px 1fr 1fr 36px; align-items:center; padding:9px 13px; border-bottom:0.5px solid var(--border) }
+.piramide-row:last-child { border-bottom:none }
+.piramide-row.done-serie { opacity:.3 }
+.p-num { font-family:'Bebas Neue',sans-serif; font-size:17px; color:var(--accent); text-align:center }
+.p-reps { font-family:'Bebas Neue',sans-serif; font-size:19px; text-align:center; color:var(--text) }
+.p-carga-input { width:56px; background:#F9F7F5; border:0.5px solid var(--border); border-radius:7px; color:var(--text); text-align:center; font-family:'Bebas Neue',sans-serif; font-size:19px; padding:4px 2px; outline:none; display:block; margin:0 auto }
+.p-carga-input:focus { border-color:var(--accent) }
+.p-check-wrap { display:flex; justify-content:center; align-items:center }
+.p-check { width:17px; height:17px; accent-color:var(--accent); cursor:pointer }
+
+.btn-toggle-sub { font-size:11px; padding:4px 11px; border-radius:20px; border:0.5px solid #DDB99A; background:var(--accent-light); color:var(--accent); cursor:pointer; white-space:nowrap; flex-shrink:0; font-family:'Bebas Neue',sans-serif; letter-spacing:1px }
+.btn-toggle-sub.ativo { background:#E5DDD4 }
+
+.ex-substituto { background:#FDFAF7; border-top:0.5px solid var(--border) }
+.ex-sub-main { display:flex; align-items:center; gap:8px; padding:9px 13px }
+.ex-sub-label { font-size:10px; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:.5px }
+.ex-sub-nome { flex:1; font-size:13px; color:var(--text) }
+
+</style>
+</head>
+<body>
+<div id="treino-timer">⏱ <span id="treino-timer-val">00:00</span></div>
+<div id="login-screen">
+  <div class="login-logo">TREINOS</div>
+  <div class="login-sub">Acesse sua ficha personalizada</div>
+  <input class="login-input" type="email" id="login-email" placeholder="Seu e-mail" autocomplete="email">
+  <input class="login-input" type="password" id="login-pass" placeholder="Senha" autocomplete="current-password">
+  <button class="login-btn" id="login-btn">Entrar</button>
+  <div class="login-error" id="login-error"></div>
+</div>
+
+<div id="offline-banner">Sem conexao - modo offline</div>
+<div id="timer-float">DESCANSO: <span id="timer-count">0</span>s <button id="btn-pular-descanso" onclick="pularDescanso()">Pular ▶</button></div>
+<div class="wrap">
+  <div class="header">
+    <div class="header-label">FICHA DE TREINO</div>
+    <div class="header-name">Marcelo Erigson</div>
+    <div class="header-meta"></div>
+  </div>
+  <div class="section active" id="sec-treinos">
+    <div class="tab-scroll"><button class="tab-btn active" onclick="showTreino('A',this)">TREINO A</button>
+<button class="tab-btn" onclick="showTreino('B',this)">TREINO B</button>
+<button class="tab-btn" onclick="showTreino('C',this)">TREINO C</button>
+<button class="tab-btn" onclick="showTreino('D',this)">TREINO D</button>
+<button class="tab-btn" onclick="showTreino('E',this)">TREINO E</button></div>
+    <div class="treino-block active" id="treino-A" data-total="7" data-label="A">
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-A" style="width:0%"></div></div>
+  <div class="block-header" style="border-left:4px solid #4A90D9">
+    <div class="block-letter" style="color:#4A90D9">A</div>
+    <div class="block-info">
+      <div class="block-title">Treino A</div>
+      <div class="block-sub">7 exercicios</div>
+      <div class="last-date" id="last-date-A"></div>
+    </div>
+    <button class="btn-iniciar-treino" id="btn-iniciar-A" onclick="toggleCronometro('A')">▶ Iniciar</button>
+  </div>
+  <div class="ex-card" id="card-A_0">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('A_0')"></div>
+    <div class="ex-num">1</div>
+    <div class="ex-name" id="name-A_0">Supino reto articulado</div>
+    <div class="ex-muscle">Peitoral</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQDy6LumpCJXRpIbKiCuZL6ZAeSTywF_zpdS9s_YJcjIobY?e=ek4amT" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-A_0" onclick="toggleSub('A_0')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-A_0_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino reto articulado_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_0_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_0_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino reto articulado_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_0_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_0_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino reto articulado_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_0_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_0_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino reto articulado_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_0_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-A_0"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Supino reto articulado')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-A_0" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Supino reto na máquina</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBr2pcAAAAAAYxv5tbkdbmutEwlZn_xBqA?e=2Ah9ox" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Supino reto na máquina_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-A_0_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-A_1">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('A_1')"></div>
+    <div class="ex-num">2</div>
+    <div class="ex-name" id="name-A_1">Supino inclinado articulado</div>
+    <div class="ex-muscle">Peitoral</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQDXmJXKeYRWSp48LZdnG5WgATXV10LI20elGQ_jUeOX9xE?e=QODUcb" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-A_1_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino inclinado articulado_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_1_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_1_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino inclinado articulado_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_1_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_1_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino inclinado articulado_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_1_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_1_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino inclinado articulado_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_1_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-A_1"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Supino inclinado articulado')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card" id="card-A_2">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('A_2')"></div>
+    <div class="ex-num">3</div>
+    <div class="ex-name" id="name-A_2">Crucifixo na máquina</div>
+    <div class="ex-muscle">Peitoral</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBr55cAAAAAARMMWaYdHpl9shqPHoZ_MHg?e=bM7qZg" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-A_2_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo na máquina_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_2_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_2_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo na máquina_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_2_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_2_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo na máquina_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_2_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_2_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo na máquina_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_2_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-A_2"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Crucifixo na máquina')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Drop-set na última</div>
+  
+</div>
+<div class="ex-card biset" id="card-A_3">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('A_3')"></div>
+    <div class="ex-num">4</div>
+    <div class="ex-name" id="name-A_3">Tríceps francês na polia média</div>
+    <div class="ex-muscle">Tríceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQAHij81HN5LRLDK6Exm8NrQAfo0QQEZRZK82orBGRquRro?e=m6POUS" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-A_3" onclick="toggleSub('A_3')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge biset">⚡ Bi-set 1</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-A_3_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Tríceps francês na polia média_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_3_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_3_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Tríceps francês na polia média_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_3_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_3_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Tríceps francês na polia média_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_3_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_3_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Tríceps francês na polia média_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_3_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-A_3"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Tríceps francês na polia média')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-A_3" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Tríceps francês com halter</span>
+    
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Tríceps francês com halter_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-A_3_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card biset" id="card-A_4">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('A_4')"></div>
+    <div class="ex-num">5</div>
+    <div class="ex-name" id="name-A_4">Tríceps pulley com corda</div>
+    <div class="ex-muscle">Tríceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrZpgAAAAAAUcwTrzKqvDmzeYR_YjX4zs?e=9ckcJQ" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-A_4" onclick="toggleSub('A_4')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge biset">⚡ Bi-set 1</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-A_4_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Tríceps pulley com corda_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_4_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_4_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Tríceps pulley com corda_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_4_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_4_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Tríceps pulley com corda_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_4_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_4_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Tríceps pulley com corda_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_4_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-A_4"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Tríceps pulley com corda')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-A_4" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Tríceps testa com barra w</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQDdNbI4TBfNRqEXrGzdD4VEAbOdYlhu8NXvpKPaOxfdeWc?e=K0Y2HB" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Tríceps testa com barra w_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-A_4_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-A_5">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('A_5')"></div>
+    <div class="ex-num">6</div>
+    <div class="ex-name" id="name-A_5">Rosca punho com barra</div>
+    <div class="ex-muscle">Antebraço</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrJpcAAAAAAUwMwy5bm3vvr2IRVMAkNk0?e=NTDfTO" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-A_5_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca punho com barra_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_5_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_5_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca punho com barra_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_5_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_5_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca punho com barra_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_5_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_5_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca punho com barra_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_5_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-A_5"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Rosca punho com barra')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Rest-pause na última</div>
+  
+</div>
+<div class="ex-card" id="card-A_6">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('A_6')"></div>
+    <div class="ex-num">7</div>
+    <div class="ex-name" id="name-A_6">Abdominal na máquina</div>
+    <div class="ex-muscle">Abdominal</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrq50AAAAAAcxFyO1i45C02G0szlVnNas?e=6Qpm7g" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-A_6_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Abdominal na máquina_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_6_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_6_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Abdominal na máquina_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_6_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_6_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Abdominal na máquina_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_6_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-A_6_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Abdominal na máquina_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-A_6_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-A_6"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Abdominal na máquina')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+  <div class="finish-screen" id="finish-A" style="display:none">
+    <div class="finish-msg">TREINO CONCLUIDO!</div>
+    <div class="finish-sub" id="finish-sub-A"></div>
+    <div style="font-size:13px;color:var(--teal);margin:-4px 0 10px;font-family:'Bebas Neue',sans-serif" id="finish-tempo-A"></div>
+    <div class="nota-wrap" style="padding:10px 0 6px">
+      <div class="nota-lbl">Como foi a intensidade?</div>
+      <div class="feedback-row">
+        <button class="feedback-btn" onclick="selecionarFeedback('A','facil',this)">😴<span>Fácil</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('A','ideal',this)">💪<span>Ideal</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('A','pesado',this)">🔥<span>Pesado</span></button>
+      </div>
+    </div>
+    <div class="nota-wrap">
+      <div class="nota-lbl">Observações</div>
+      <textarea id="nota-A" placeholder="Anote como se sentiu..."></textarea>
+    </div>
+    <button class="finish-btn" onclick="finalizarTreino('A')">Finalizar e Salvar</button>
+    <button class="wpp-btn" onclick="enviarWhatsapp('A')">Enviar Resumo ao Personal</button>
+    <button class="share-btn" onclick="compartilhar('A')">Compartilhar esta Ficha</button>
+  </div>
+</div>
+<div class="treino-block " id="treino-B" data-total="7" data-label="B">
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-B" style="width:0%"></div></div>
+  <div class="block-header" style="border-left:4px solid #E67E22">
+    <div class="block-letter" style="color:#E67E22">B</div>
+    <div class="block-info">
+      <div class="block-title">Treino B</div>
+      <div class="block-sub">7 exercicios</div>
+      <div class="last-date" id="last-date-B"></div>
+    </div>
+    <button class="btn-iniciar-treino" id="btn-iniciar-B" onclick="toggleCronometro('B')">▶ Iniciar</button>
+  </div>
+  <div class="ex-card" id="card-B_0">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('B_0')"></div>
+    <div class="ex-num">1</div>
+    <div class="ex-name" id="name-B_0">Puxada pronada no graviton</div>
+    <div class="ex-muscle">Costas</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrfpcAAAAAAbaqgWGEjXWnIZiP4vs3QZY?e=0ZrCsP" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-B_0" onclick="toggleSub('B_0')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-B_0_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Puxada pronada no graviton_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_0_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_0_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Puxada pronada no graviton_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_0_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_0_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Puxada pronada no graviton_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_0_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_0_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Puxada pronada no graviton_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_0_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-B_0"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Puxada pronada no graviton')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-B_0" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Pulley convergente</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQCUkK7EBXIfRq1p753vZcolAbAcGZP1RSdJlS3nbn8H3bs?e=6c3dYB" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Pulley convergente_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-B_0_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-B_1">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('B_1')"></div>
+    <div class="ex-num">2</div>
+    <div class="ex-name" id="name-B_1">Remada cavalinho no aparelho</div>
+    <div class="ex-muscle">Costas</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQATQmVUz7tVSJ3dAe5oAICfAX3t80zBjRg-gDEJUJ7xTQc?e=c25hWh" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-B_1" onclick="toggleSub('B_1')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-B_1_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada cavalinho no aparelho_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_1_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_1_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada cavalinho no aparelho_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_1_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_1_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada cavalinho no aparelho_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_1_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_1_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada cavalinho no aparelho_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_1_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-B_1"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Remada cavalinho no aparelho')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-B_1" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Remada aberta na máquina</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrdpcAAAAAAfsRT1KTHt61a08YTmxGHCE?e=Cfwywv" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Remada aberta na máquina_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-B_1_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-B_2">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('B_2')"></div>
+    <div class="ex-num">3</div>
+    <div class="ex-name" id="name-B_2">Remada baixa com triângulo</div>
+    <div class="ex-muscle">Costas</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBreJcAAAAAAacKUYghez7PMfpRE88POWE?e=pbHtv2" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-B_2_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada baixa com triângulo_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_2_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_2_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada baixa com triângulo_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_2_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_2_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada baixa com triângulo_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_2_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_2_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada baixa com triângulo_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_2_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-B_2"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Remada baixa com triângulo')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Drop-set na última</div>
+  
+</div>
+<div class="ex-card" id="card-B_3">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('B_3')"></div>
+    <div class="ex-num">4</div>
+    <div class="ex-name" id="name-B_3">Crucifixo inverso na máquina</div>
+    <div class="ex-muscle">Ombro</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQBxI_uSmG_wS5LYe2NLPiscAaBuqbttWvBW1NQODr_FsHU?e=rRS2ms" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-B_3_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inverso na máquina_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_3_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_3_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inverso na máquina_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_3_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_3_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inverso na máquina_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_3_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_3_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inverso na máquina_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_3_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-B_3"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Crucifixo inverso na máquina')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Res-pause na última</div>
+  
+</div>
+<div class="ex-card biset" id="card-B_4">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('B_4')"></div>
+    <div class="ex-num">5</div>
+    <div class="ex-name" id="name-B_4">Rosca com halter no  banco 45°  </div>
+    <div class="ex-muscle">Bíceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQCgHApipMWsR7HQEKW3nrUMAa6h9MwPe02IQqSGUn40aw0?e=YnMN6R" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge biset">⚡ Bi-set 1</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-B_4_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca com halter no  banco 45°  _s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_4_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_4_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca com halter no  banco 45°  _s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_4_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_4_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca com halter no  banco 45°  _s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_4_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_4_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca com halter no  banco 45°  _s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_4_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-B_4"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Rosca com halter no  banco 45°  ')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card biset" id="card-B_5">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('B_5')"></div>
+    <div class="ex-num">6</div>
+    <div class="ex-name" id="name-B_5">Rosca martelo sentado</div>
+    <div class="ex-muscle">Bíceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrZbgAAAAAAefugWfH2wCbmDU_Dw5_UJM?e=UBEJY5" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge biset">⚡ Bi-set 1</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-B_5_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca martelo sentado_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_5_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_5_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca martelo sentado_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_5_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_5_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca martelo sentado_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_5_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_5_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca martelo sentado_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_5_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-B_5"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Rosca martelo sentado')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card" id="card-B_6">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('B_6')"></div>
+    <div class="ex-num">7</div>
+    <div class="ex-name" id="name-B_6">Abdominal infra</div>
+    <div class="ex-muscle">Abdominal</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrf50AAAAAAdCa4KlF2jYFTPjV45l7e-U?e=TeQb9e" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-B_6" onclick="toggleSub('B_6')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-B_6_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Abdominal infra_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_6_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_6_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Abdominal infra_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_6_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_6_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Abdominal infra_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_6_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-B_6_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Abdominal infra_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-B_6_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-B_6"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Abdominal infra')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-B_6" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Remador</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQCoLo5KnFwORaJ8J4OQiT1-AVFwxQuc_omGGXQmZfQMyhU?e=pJZ8Oo" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Remador_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-B_6_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+  <div class="finish-screen" id="finish-B" style="display:none">
+    <div class="finish-msg">TREINO CONCLUIDO!</div>
+    <div class="finish-sub" id="finish-sub-B"></div>
+    <div style="font-size:13px;color:var(--teal);margin:-4px 0 10px;font-family:'Bebas Neue',sans-serif" id="finish-tempo-B"></div>
+    <div class="nota-wrap" style="padding:10px 0 6px">
+      <div class="nota-lbl">Como foi a intensidade?</div>
+      <div class="feedback-row">
+        <button class="feedback-btn" onclick="selecionarFeedback('B','facil',this)">😴<span>Fácil</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('B','ideal',this)">💪<span>Ideal</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('B','pesado',this)">🔥<span>Pesado</span></button>
+      </div>
+    </div>
+    <div class="nota-wrap">
+      <div class="nota-lbl">Observações</div>
+      <textarea id="nota-B" placeholder="Anote como se sentiu..."></textarea>
+    </div>
+    <button class="finish-btn" onclick="finalizarTreino('B')">Finalizar e Salvar</button>
+    <button class="wpp-btn" onclick="enviarWhatsapp('B')">Enviar Resumo ao Personal</button>
+    <button class="share-btn" onclick="compartilhar('B')">Compartilhar esta Ficha</button>
+  </div>
+</div>
+<div class="treino-block " id="treino-C" data-total="7" data-label="C">
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-C" style="width:0%"></div></div>
+  <div class="block-header" style="border-left:4px solid #27AE60">
+    <div class="block-letter" style="color:#27AE60">C</div>
+    <div class="block-info">
+      <div class="block-title">Treino C</div>
+      <div class="block-sub">7 exercicios</div>
+      <div class="last-date" id="last-date-C"></div>
+    </div>
+    <button class="btn-iniciar-treino" id="btn-iniciar-C" onclick="toggleCronometro('C')">▶ Iniciar</button>
+  </div>
+  <div class="ex-card" id="card-C_0">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('C_0')"></div>
+    <div class="ex-num">1</div>
+    <div class="ex-name" id="name-C_0">Agachamento no smith</div>
+    <div class="ex-muscle">Quadríceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQCkwesnq5_TQoLaNWMm6MioAeu3N2_zGr1WstpDjkAdRbc?e=KPUsl5" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-C_0" onclick="toggleSub('C_0')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-C_0_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Agachamento no smith_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_0_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_0_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Agachamento no smith_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_0_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_0_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Agachamento no smith_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_0_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_0_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Agachamento no smith_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_0_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-C_0"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Agachamento no smith')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-C_0" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Agachamento no hack linear</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrQ5gAAAAAATYQDf81q3OL2BimE08C0Fk?e=KdoNAP" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Agachamento no hack linear_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-C_0_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-C_1">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('C_1')"></div>
+    <div class="ex-num">2</div>
+    <div class="ex-name" id="name-C_1">Leg-press 45</div>
+    <div class="ex-muscle">Quadríceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrG5gAAAAAAR1ODoU_C9CmkG9__Xfndvw?e=0nOGLq" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-C_1" onclick="toggleSub('C_1')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-C_1_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Leg-press 45_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_1_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_1_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Leg-press 45_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_1_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_1_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Leg-press 45_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_1_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_1_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Leg-press 45_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_1_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-C_1"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Leg-press 45')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-C_1" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Leg-press horizontal</span>
+    
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Leg-press horizontal_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-C_1_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-C_2">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('C_2')"></div>
+    <div class="ex-num">3</div>
+    <div class="ex-name" id="name-C_2">Cadeira extensora</div>
+    <div class="ex-muscle">Quadríceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQAvbSx4ww0tQoXYjesrUqzSAQ7MzDAN6fT6WeGy5VK-efE?e=3YZQQu" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-C_2_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira extensora_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_2_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_2_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira extensora_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_2_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_2_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira extensora_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_2_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_2_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira extensora_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_2_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-C_2"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Cadeira extensora')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Drop-set na última</div>
+  
+</div>
+<div class="ex-card" id="card-C_3">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('C_3')"></div>
+    <div class="ex-num">4</div>
+    <div class="ex-name" id="name-C_3">Cadeira flexora</div>
+    <div class="ex-muscle">Posterior</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrLZgAAAAAAdYqvkFiskbIL3Hs5fCINpE?e=0ZFgRq" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-C_3_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira flexora_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_3_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_3_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira flexora_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_3_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_3_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira flexora_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_3_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_3_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira flexora_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_3_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-C_3"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Cadeira flexora')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Drop-set na última</div>
+  
+</div>
+<div class="ex-card" id="card-C_4">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('C_4')"></div>
+    <div class="ex-num">5</div>
+    <div class="ex-name" id="name-C_4">Flexora em pé</div>
+    <div class="ex-muscle">Posterior</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrIJgAAAAAAYIPPQX2fS0GFYjXzSJalhU?e=gM5cXM" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-C_4_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Flexora em pé_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_4_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_4_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Flexora em pé_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_4_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_4_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Flexora em pé_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_4_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_4_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Flexora em pé_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_4_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-C_4"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Flexora em pé')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card" id="card-C_5">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('C_5')"></div>
+    <div class="ex-num">6</div>
+    <div class="ex-name" id="name-C_5">Cadeira abdutora</div>
+    <div class="ex-muscle">Glúteos</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQBNQw5o18rTR7gcbReeS8rdAQJSJufSwGsNs7VVHfScUFg?e=IH1wvb" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-C_5_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira abdutora_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_5_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_5_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira abdutora_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_5_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_5_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira abdutora_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_5_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_5_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Cadeira abdutora_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_5_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-C_5"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Cadeira abdutora')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card" id="card-C_6">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('C_6')"></div>
+    <div class="ex-num">7</div>
+    <div class="ex-name" id="name-C_6">Panturrilha no leg-press horizontal</div>
+    <div class="ex-muscle">Panturrilha</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrDZgAAAAAAcDOYwNG9SnYvXRmN5jnJNc?e=zMYH2W" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-C_6" onclick="toggleSub('C_6')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-C_6_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Panturrilha no leg-press horizontal_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_6_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_6_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Panturrilha no leg-press horizontal_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_6_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_6_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Panturrilha no leg-press horizontal_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_6_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-C_6_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Panturrilha no leg-press horizontal_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-C_6_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-C_6"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Panturrilha no leg-press horizontal')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-C_6" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Panturrilha na máquina</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrEpgAAAAAAZktiNHQqgUIPwB1fkN-n3U?e=LacR45" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Panturrilha na máquina_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-C_6_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+  <div class="finish-screen" id="finish-C" style="display:none">
+    <div class="finish-msg">TREINO CONCLUIDO!</div>
+    <div class="finish-sub" id="finish-sub-C"></div>
+    <div style="font-size:13px;color:var(--teal);margin:-4px 0 10px;font-family:'Bebas Neue',sans-serif" id="finish-tempo-C"></div>
+    <div class="nota-wrap" style="padding:10px 0 6px">
+      <div class="nota-lbl">Como foi a intensidade?</div>
+      <div class="feedback-row">
+        <button class="feedback-btn" onclick="selecionarFeedback('C','facil',this)">😴<span>Fácil</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('C','ideal',this)">💪<span>Ideal</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('C','pesado',this)">🔥<span>Pesado</span></button>
+      </div>
+    </div>
+    <div class="nota-wrap">
+      <div class="nota-lbl">Observações</div>
+      <textarea id="nota-C" placeholder="Anote como se sentiu..."></textarea>
+    </div>
+    <button class="finish-btn" onclick="finalizarTreino('C')">Finalizar e Salvar</button>
+    <button class="wpp-btn" onclick="enviarWhatsapp('C')">Enviar Resumo ao Personal</button>
+    <button class="share-btn" onclick="compartilhar('C')">Compartilhar esta Ficha</button>
+  </div>
+</div>
+<div class="treino-block " id="treino-D" data-total="7" data-label="D">
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-D" style="width:0%"></div></div>
+  <div class="block-header" style="border-left:4px solid #8E44AD">
+    <div class="block-letter" style="color:#8E44AD">D</div>
+    <div class="block-info">
+      <div class="block-title">Treino D</div>
+      <div class="block-sub">7 exercicios</div>
+      <div class="last-date" id="last-date-D"></div>
+    </div>
+    <button class="btn-iniciar-treino" id="btn-iniciar-D" onclick="toggleCronometro('D')">▶ Iniciar</button>
+  </div>
+  <div class="ex-card" id="card-D_0">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('D_0')"></div>
+    <div class="ex-num">1</div>
+    <div class="ex-name" id="name-D_0">Supino reto articulado</div>
+    <div class="ex-muscle">Peitoral</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQDy6LumpCJXRpIbKiCuZL6ZAeSTywF_zpdS9s_YJcjIobY?e=ek4amT" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-D_0_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino reto articulado_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_0_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_0_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino reto articulado_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_0_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_0_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino reto articulado_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_0_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_0_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Supino reto articulado_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_0_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-D_0"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Supino reto articulado')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card" id="card-D_1">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('D_1')"></div>
+    <div class="ex-num">2</div>
+    <div class="ex-name" id="name-D_1">Crucifixo inclinado com halter (30°)</div>
+    <div class="ex-muscle">Peitoral</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBr6JcAAAAAAW7Qsj6MVvrnq7KDdzF7xs4?e=fe8180" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-D_1" onclick="toggleSub('D_1')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-D_1_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inclinado com halter (30°)_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_1_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_1_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inclinado com halter (30°)_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_1_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_1_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inclinado com halter (30°)_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_1_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_1_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inclinado com halter (30°)_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_1_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-D_1"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Crucifixo inclinado com halter (30°)')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-D_1" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Crossover polia baixa</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBr7ZcAAAAAAcTPlQkiz-_MSWt4ZI_JGAo?e=WAzoxC" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Crossover polia baixa_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-D_1_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-D_2">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('D_2')"></div>
+    <div class="ex-num">3</div>
+    <div class="ex-name" id="name-D_2">Remada cavalinho no aparelho</div>
+    <div class="ex-muscle">Costas</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQATQmVUz7tVSJ3dAe5oAICfAX3t80zBjRg-gDEJUJ7xTQc?e=c25hWh" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-D_2" onclick="toggleSub('D_2')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-D_2_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada cavalinho no aparelho_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_2_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_2_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada cavalinho no aparelho_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_2_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_2_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada cavalinho no aparelho_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_2_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_2_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Remada cavalinho no aparelho_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_2_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-D_2"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Remada cavalinho no aparelho')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-D_2" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Remada baixa com triângulo</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBreJcAAAAAAacKUYghez7PMfpRE88POWE?e=pbHtv2" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Remada baixa com triângulo_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-D_2_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-D_3">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('D_3')"></div>
+    <div class="ex-num">4</div>
+    <div class="ex-name" id="name-D_3">Pulley com triângulo</div>
+    <div class="ex-muscle">Costas</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrhZcAAAAAAd0BLuc00O2B-6NIpHZ5GHA?e=ecRwL3" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-D_3_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Pulley com triângulo_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_3_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_3_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Pulley com triângulo_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_3_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_3_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Pulley com triângulo_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_3_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_3_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Pulley com triângulo_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_3_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-D_3"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Pulley com triângulo')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Drop-set na última</div>
+  
+</div>
+<div class="ex-card" id="card-D_4">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('D_4')"></div>
+    <div class="ex-num">5</div>
+    <div class="ex-name" id="name-D_4">Crucifixo inverso na máquina</div>
+    <div class="ex-muscle">Ombro</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQBxI_uSmG_wS5LYe2NLPiscAaBuqbttWvBW1NQODr_FsHU?e=rRS2ms" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-D_4" onclick="toggleSub('D_4')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-D_4_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inverso na máquina_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_4_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_4_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inverso na máquina_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_4_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_4_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inverso na máquina_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_4_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_4_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Crucifixo inverso na máquina_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_4_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-D_4"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Crucifixo inverso na máquina')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Drop-set na última</div>
+  <div class="ex-substituto" id="sub-wrap-D_4" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Facepull</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrVKEAAAAAAbPnWcblTPC-AtCCTbrnQl8?e=iCWPFf" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Facepull_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-D_4_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card biset" id="card-D_5">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('D_5')"></div>
+    <div class="ex-num">6</div>
+    <div class="ex-name" id="name-D_5">Prancha isométrica</div>
+    <div class="ex-muscle">Abdominal</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrw50AAAAAATeSihiLyNIEVZGKj4u5hKM?e=31RgwC" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge biset">⚡ Bi-set 1</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-D_5_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">Máximo</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Prancha isométrica_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_5_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_5_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">Máximo</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Prancha isométrica_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_5_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_5_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">Máximo</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Prancha isométrica_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_5_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_5_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">Máximo</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Prancha isométrica_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_5_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-D_5"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Prancha isométrica')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card biset" id="card-D_6">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('D_6')"></div>
+    <div class="ex-num">7</div>
+    <div class="ex-name" id="name-D_6">Banco romano</div>
+    <div class="ex-muscle">Costas</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBr050AAAAAAQZR1sDQ42VJ_I29rZmUnnA?e=zj9rFe" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge biset">⚡ Bi-set 1</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-D_6_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Banco romano_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_6_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_6_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Banco romano_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_6_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_6_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Banco romano_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_6_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-D_6_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Banco romano_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-D_6_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-D_6"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Banco romano')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+  <div class="finish-screen" id="finish-D" style="display:none">
+    <div class="finish-msg">TREINO CONCLUIDO!</div>
+    <div class="finish-sub" id="finish-sub-D"></div>
+    <div style="font-size:13px;color:var(--teal);margin:-4px 0 10px;font-family:'Bebas Neue',sans-serif" id="finish-tempo-D"></div>
+    <div class="nota-wrap" style="padding:10px 0 6px">
+      <div class="nota-lbl">Como foi a intensidade?</div>
+      <div class="feedback-row">
+        <button class="feedback-btn" onclick="selecionarFeedback('D','facil',this)">😴<span>Fácil</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('D','ideal',this)">💪<span>Ideal</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('D','pesado',this)">🔥<span>Pesado</span></button>
+      </div>
+    </div>
+    <div class="nota-wrap">
+      <div class="nota-lbl">Observações</div>
+      <textarea id="nota-D" placeholder="Anote como se sentiu..."></textarea>
+    </div>
+    <button class="finish-btn" onclick="finalizarTreino('D')">Finalizar e Salvar</button>
+    <button class="wpp-btn" onclick="enviarWhatsapp('D')">Enviar Resumo ao Personal</button>
+    <button class="share-btn" onclick="compartilhar('D')">Compartilhar esta Ficha</button>
+  </div>
+</div>
+<div class="treino-block " id="treino-E" data-total="7" data-label="E">
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-E" style="width:0%"></div></div>
+  <div class="block-header" style="border-left:4px solid #E74C3C">
+    <div class="block-letter" style="color:#E74C3C">E</div>
+    <div class="block-info">
+      <div class="block-title">Treino E</div>
+      <div class="block-sub">7 exercicios</div>
+      <div class="last-date" id="last-date-E"></div>
+    </div>
+    <button class="btn-iniciar-treino" id="btn-iniciar-E" onclick="toggleCronometro('E')">▶ Iniciar</button>
+  </div>
+  <div class="ex-card" id="card-E_0">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('E_0')"></div>
+    <div class="ex-num">1</div>
+    <div class="ex-name" id="name-E_0">Desenvolvimento com halter sentado</div>
+    <div class="ex-muscle">Ombro</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBru5cAAAAAASlRoHNGG1uG9H7yCBzBexI?e=FnacGP" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-E_0" onclick="toggleSub('E_0')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-E_0_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Desenvolvimento com halter sentado_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_0_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_0_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Desenvolvimento com halter sentado_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_0_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_0_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Desenvolvimento com halter sentado_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_0_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_0_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Desenvolvimento com halter sentado_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_0_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-E_0"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Desenvolvimento com halter sentado')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-E_0" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Desenvolvimento na máquina</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrw5cAAAAAAYr3WdCxcTUc2y3EF0Sgobk?e=ardnfi" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Desenvolvimento na máquina_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-E_0_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card biset" id="card-E_1">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('E_1')"></div>
+    <div class="ex-num">2</div>
+    <div class="ex-name" id="name-E_1">Elevação lateral com halter</div>
+    <div class="ex-muscle">Ombro</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrqJcAAAAAAaCyyenSutiwxtXuIxTUrfY?e=OFe4HM" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge biset">⚡ Bi-set 1</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-E_1_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Elevação lateral com halter_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_1_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_1_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Elevação lateral com halter_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_1_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_1_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Elevação lateral com halter_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_1_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_1_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Elevação lateral com halter_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_1_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-E_1"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Elevação lateral com halter')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card biset" id="card-E_2">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('E_2')"></div>
+    <div class="ex-num">3</div>
+    <div class="ex-name" id="name-E_2">Elevação frontal com halter</div>
+    <div class="ex-muscle">Ombro</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrs5cAAAAAAQpNhwonPAiMvL2_68QQzb0?e=8VsaXj" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge biset">⚡ Bi-set 1</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-E_2_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Elevação frontal com halter_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_2_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_2_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Elevação frontal com halter_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_2_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_2_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Elevação frontal com halter_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_2_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_2_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Elevação frontal com halter_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_2_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-E_2"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Elevação frontal com halter')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+<div class="ex-card" id="card-E_3">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('E_3')"></div>
+    <div class="ex-num">4</div>
+    <div class="ex-name" id="name-E_3">Paralelas no graviton</div>
+    <div class="ex-muscle">Tríceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrdJgAAAAAAdWwlDmgaVJw7ZM-5za63PU?e=r4lIhI" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-E_3" onclick="toggleSub('E_3')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-E_3_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Paralelas no graviton_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_3_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_3_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Paralelas no graviton_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_3_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_3_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Paralelas no graviton_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_3_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_3_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Paralelas no graviton_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_3_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-E_3"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Paralelas no graviton')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-E_3" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Tríceps na máquina</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQCf6rmeubC1RLBHtQFyFpQeATpxLRqh0NjVr-Ex_KEmBw0?e=COF9Tl" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Tríceps na máquina_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-E_3_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-E_4">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('E_4')"></div>
+    <div class="ex-num">5</div>
+    <div class="ex-name" id="name-E_4">Rosca unilateral na polia</div>
+    <div class="ex-muscle">Bíceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBr5pcAAAAAAWfVFw_G9J_S6QTUqZ4dtBo?e=Bv94X2" target="_blank">🎬</a><button class="btn-toggle-sub" id="btn-sub-E_4" onclick="toggleSub('E_4')" style="margin-left:auto">↔ Sub.</button>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-E_4_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca unilateral na polia_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_4_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_4_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca unilateral na polia_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_4_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_4_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca unilateral na polia_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_4_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_4_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca unilateral na polia_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_4_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-E_4"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Rosca unilateral na polia')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  <div class="ex-substituto" id="sub-wrap-E_4" style="display:none">
+  <div class="ex-sub-main">
+    <span class="ex-sub-label">↔ Sub.</span>
+    <span class="ex-sub-nome">Rosca alternada</span>
+     <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrPZcAAAAAAWCiEfIhJlOxx5qqSZArI8c?e=dD1C6t" target="_blank">🎬</a>
+  </div>
+  <div class="ex-stats" style="border-top:1px solid rgba(34,211,238,.1)">
+    <div class="stat" style="grid-column:span 2"></div>
+    <div class="stat">
+      <input class="carga-input" type="number" inputmode="decimal"
+        value="" data-ex="Rosca alternada_sub" data-prescrito=""
+        onchange="salvarCarga(this)">
+      <div class="stat-lbl">kg</div>
+      <div class="hist-carga" id="hist-E_4_sub"></div>
+    </div>
+    <div class="stat" style="grid-column:span 1"></div>
+  </div>
+</div>
+</div>
+<div class="ex-card" id="card-E_5">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('E_5')"></div>
+    <div class="ex-num">6</div>
+    <div class="ex-name" id="name-E_5">Rosca Scott na máquina</div>
+    <div class="ex-muscle">Bíceps</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrWJcAAAAAAdMCN-voYbZSTrvv7mPt24Y?e=52arrM" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-E_5_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca Scott na máquina_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_5_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_5_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca Scott na máquina_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_5_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_5_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca Scott na máquina_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_5_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_5_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca Scott na máquina_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_5_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-E_5"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Rosca Scott na máquina')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  <div class="ex-obs"><b>Obs.:</b> Drop-set na última</div>
+  
+</div>
+<div class="ex-card" id="card-E_6">
+  <div class="ex-main">
+    <div class="check-area"><input type="checkbox" class="ex-check" onclick="toggleEx('E_6')"></div>
+    <div class="ex-num">7</div>
+    <div class="ex-name" id="name-E_6">Rosca inversa com barra w</div>
+    <div class="ex-muscle">Antebraço</div><a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQCH0CxxZ0OuTpoBxGSC95laAZlhDwEYMHUqs9w33gMEy10?e=egMHg6" target="_blank">🎬</a>
+  </div>
+  <div class="ex-sistema"><span class="metodo-badge "> Tradicional</span></div>
+  <div class="piramide-table">
+          <div class="piramide-header">
+          <span>Sér.</span><span>Reps</span><span>Carga</span><span>✓</span>
+        </div><div class="piramide-row" id="pr-E_6_s1">
+              <div class="p-num">1</div>
+              <div class="p-reps">10-12</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca inversa com barra w_s1"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_6_s1', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_6_s2">
+              <div class="p-num">2</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca inversa com barra w_s2"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_6_s2', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_6_s3">
+              <div class="p-num">3</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca inversa com barra w_s3"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_6_s3', 90)">
+              </div>
+            </div><div class="piramide-row" id="pr-E_6_s4">
+              <div class="p-num">4</div>
+              <div class="p-reps">6-8</div>
+              <input class="p-carga-input" type="number" inputmode="decimal"
+                value="" data-ex="Rosca inversa com barra w_s4"
+                onchange="salvarCarga(this)">
+              <div class="p-check-wrap">
+                <input type="checkbox" class="p-check" onclick="toggleSerie(this, 'pr-E_6_s4', 90)">
+              </div>
+            </div>
+          <div style="padding:8px 14px;display:flex;align-items:center;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="hist-carga" id="hist-E_6"></div>
+              <button class="btn-grafico" onclick="abrirGrafico('Rosca inversa com barra w')">ver evolução</button>
+            </div>
+          </div>
+        </div>
+  
+  
+</div>
+  <div class="finish-screen" id="finish-E" style="display:none">
+    <div class="finish-msg">TREINO CONCLUIDO!</div>
+    <div class="finish-sub" id="finish-sub-E"></div>
+    <div style="font-size:13px;color:var(--teal);margin:-4px 0 10px;font-family:'Bebas Neue',sans-serif" id="finish-tempo-E"></div>
+    <div class="nota-wrap" style="padding:10px 0 6px">
+      <div class="nota-lbl">Como foi a intensidade?</div>
+      <div class="feedback-row">
+        <button class="feedback-btn" onclick="selecionarFeedback('E','facil',this)">😴<span>Fácil</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('E','ideal',this)">💪<span>Ideal</span></button>
+        <button class="feedback-btn" onclick="selecionarFeedback('E','pesado',this)">🔥<span>Pesado</span></button>
+      </div>
+    </div>
+    <div class="nota-wrap">
+      <div class="nota-lbl">Observações</div>
+      <textarea id="nota-E" placeholder="Anote como se sentiu..."></textarea>
+    </div>
+    <button class="finish-btn" onclick="finalizarTreino('E')">Finalizar e Salvar</button>
+    <button class="wpp-btn" onclick="enviarWhatsapp('E')">Enviar Resumo ao Personal</button>
+    <button class="share-btn" onclick="compartilhar('E')">Compartilhar esta Ficha</button>
+  </div>
+</div>
+    <div class="footer" style="display:flex;flex-direction:column;align-items:center;gap:8px">Ficha gerada por Me. Natan Gomes<button class="logout-btn-all" onclick="window._fbSignOut()" style="background:none;border:none;color:var(--gray);font-size:11px;cursor:pointer;text-decoration:underline;display:none">Sair da conta</button></div>
+  </div>
+  <div class="section" id="sec-aerobio">
+    <div style="padding:20px 14px 10px"><div class="header-label">TREINO AEROBIO</div></div>
+    <div class="aer-card"><div class="aer-header"><div class="aer-dia">Segunda</div><div class="aer-modal">Bike</div><div class="aer-spacer"></div></div><div class="aer-stats"><div class="aer-stat"><div class="aer-val">6</div><div class="aer-lbl">Series</div></div><div class="aer-stat"><div class="aer-val">1 min<span class="aer-sep">·</span>Z4</div><div class="aer-lbl">Estimulo</div></div><div class="aer-stat"><div class="aer-val">1 min<span class="aer-sep">·</span>Z2</div><div class="aer-lbl">Recuperação</div></div></div></div>
+<div class="aer-card"><div class="aer-header"><div class="aer-dia">Terça</div><div class="aer-modal">Corrida ao ar livre</div><div class="aer-spacer"></div></div><div class="aer-stats"><div class="aer-stat"><div class="aer-val">5km</div></div><div class="aer-stat"><div class="aer-val" style="color:var(--teal)">Z3</div><div class="aer-lbl">Zona FC</div></div><div class="aer-stat"><div class="aer-val">—</div><div class="aer-lbl">Vel/PSE</div></div></div></div>
+<div class="aer-card"><div class="aer-header"><div class="aer-dia">Quarta</div><div class="aer-modal">Esteira</div><div class="aer-spacer"></div></div><div class="aer-stats"><div class="aer-stat"><div class="aer-val">12 min</div></div><div class="aer-stat"><div class="aer-val" style="color:var(--teal)">Z2</div><div class="aer-lbl">Zona FC</div></div><div class="aer-stat"><div class="aer-val">—</div><div class="aer-lbl">Vel/PSE</div></div></div></div>
+<div class="aer-card"><div class="aer-header"><div class="aer-dia">Quinta</div><div class="aer-modal">Corrida ao ar livre</div><div class="aer-spacer"></div></div><div class="aer-stats"><div class="aer-stat"><div class="aer-val">10</div><div class="aer-lbl">Series</div></div><div class="aer-stat"><div class="aer-val">200 m<span class="aer-sep">·</span>Máxima</div><div class="aer-lbl">Estimulo</div></div><div class="aer-stat"><div class="aer-val">300 m<span class="aer-sep">·</span>Leve</div><div class="aer-lbl">Recuperação</div></div></div></div>
+<div class="aer-card"><div class="aer-header"><div class="aer-dia">Sexta</div><div class="aer-modal">Bike</div><div class="aer-spacer"></div></div><div class="aer-stats"><div class="aer-stat"><div class="aer-val">3</div><div class="aer-lbl">Series</div></div><div class="aer-stat"><div class="aer-val">2 min<span class="aer-sep">·</span>Máxima</div><div class="aer-lbl">Estimulo</div></div><div class="aer-stat"><div class="aer-val">2 min<span class="aer-sep">·</span>Leve</div><div class="aer-lbl">Recuperação</div></div></div></div>
+    <div class="footer" style="display:flex;flex-direction:column;align-items:center;gap:8px">Ficha gerada por Me. Natan Gomes<button class="logout-btn-all" onclick="window._fbSignOut()" style="background:none;border:none;color:var(--gray);font-size:11px;cursor:pointer;text-decoration:underline;display:none">Sair da conta</button></div>
+  </div>
+  <div class="section" id="sec-saiba">
+    <div style="padding:20px 14px 10px"><div class="header-label">SAIBA MAIS</div>
+    <div style="font-size:11px;color:var(--gray);margin-top:4px">Tecnicas utilizadas nesta ficha</div></div>
+    <div class="tec-card">
+  <div class="tec-header">
+    <div class="tec-nome">Drop-set</div>
+    <span class="tec-badge" style="background:#92400e;color:#fcd34d">Alta</span>
+  </div>
+  <div class="tec-desc">Ao atingir a falha, reduza imediatamente a carga (geralmente 20–30%) e continue executando repetições sem descanso. Pode ser feito em 2 ou 3 drops consecutivos. Promove grande estresse metabólico e hipertrofia.</div>
+</div>
+<div class="tec-card">
+  <div class="tec-header">
+    <div class="tec-nome">Bi-set</div>
+    <span class="tec-badge" style="background:#92400e;color:#fcd34d">Alta</span>
+  </div>
+  <div class="tec-desc">Dois exercícios para o mesmo grupo muscular executados em sequência sem descanso entre eles. Aumenta o volume e o estresse muscular local. Diferente do super-set, não há alternância de antagonistas.</div>
+</div>
+<div class="tec-card">
+  <div class="tec-header">
+    <div class="tec-nome">Rest-pause</div>
+    <span class="tec-badge" style="background:#92400e;color:#fcd34d">Alta</span>
+  </div>
+  <div class="tec-desc">Técnica de intensidade avançada. Após atingir a falha muscular, descanse de 10 a 15 segundos e execute mais algumas repetições. Pode ser repetido 2 a 3 vezes na mesma série. Aumenta o volume de trabalho sem aumentar o tempo de treino.</div>
+</div>
+    <div class="footer" style="display:flex;flex-direction:column;align-items:center;gap:8px">Ficha gerada por Me. Natan Gomes<button class="logout-btn-all" onclick="window._fbSignOut()" style="background:none;border:none;color:var(--gray);font-size:11px;cursor:pointer;text-decoration:underline;display:none">Sair da conta</button></div>
+  </div>
+
+  <div class="section" id="sec-volume">
+    <div style="padding:20px 14px 10px">
+      <div class="header-label">VOLUME POR GRUPO MUSCULAR</div>
+      <div style="font-size:11px;color:var(--gray);margin-top:4px">Laranja = Anterior | Azul = Atual</div>
+    </div>
+    <div class="vol-card vol-card-prio"><div class="vol-top"><div class="vol-muscle">Peitoral</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-prio-badge">🎯 Prioridade</span><span class="vol-diff up">+ 24</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:75%"></div></div><div class="vol-num">24</div></div></div></div>
+<div class="vol-card vol-card-prio"><div class="vol-top"><div class="vol-muscle">Costas</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-prio-badge">🎯 Prioridade</span><span class="vol-diff up">+ 24</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:75%"></div></div><div class="vol-num">24</div></div></div></div>
+<div class="vol-card vol-card-prio"><div class="vol-top"><div class="vol-muscle">Quadríceps</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-prio-badge">🎯 Prioridade</span><span class="vol-diff up">+ 12</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:38%"></div></div><div class="vol-num">12</div></div></div></div>
+<div class="vol-card"><div class="vol-top"><div class="vol-muscle">Posterior</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-diff up">+ 10</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:31%"></div></div><div class="vol-num">10</div></div></div></div>
+<div class="vol-card"><div class="vol-top"><div class="vol-muscle">Glúteos</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-diff up">+ 4</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:12%"></div></div><div class="vol-num">4</div></div></div></div>
+<div class="vol-card"><div class="vol-top"><div class="vol-muscle">Abdominal</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-diff up">+ 10</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:31%"></div></div><div class="vol-num">10</div></div></div></div>
+<div class="vol-card"><div class="vol-top"><div class="vol-muscle">Ombro</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-diff neutral">= 0</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:0%"></div></div><div class="vol-num">0</div></div></div></div>
+<div class="vol-card"><div class="vol-top"><div class="vol-muscle">Bíceps</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-diff up">+ 12</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:38%"></div></div><div class="vol-num">12</div></div></div></div>
+<div class="vol-card"><div class="vol-top"><div class="vol-muscle">Tríceps</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-diff up">+ 32</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:100%"></div></div><div class="vol-num">32</div></div></div></div>
+<div class="vol-card"><div class="vol-top"><div class="vol-muscle">Antebraço</div><div style="display:flex;align-items:center;gap:8px"><span class="vol-diff up">+ 8</span></div></div><div class="vol-bars"><div class="vol-row"><div class="vol-label">Anterior</div><div class="vol-bar-bg"><div class="vol-bar-fill ant" style="width:0%"></div></div><div class="vol-num">0</div></div><div class="vol-row"><div class="vol-label">Atual</div><div class="vol-bar-bg"><div class="vol-bar-fill atu" style="width:25%"></div></div><div class="vol-num">8</div></div></div></div>
+    <div class="footer" style="display:flex;flex-direction:column;align-items:center;gap:8px">Ficha gerada por Me. Natan Gomes<button class="logout-btn-all" onclick="window._fbSignOut()" style="background:none;border:none;color:var(--gray);font-size:11px;cursor:pointer;text-decoration:underline;display:none">Sair da conta</button></div>
+  </div>
+</div>
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-treinos" onclick="showSection('treinos')">
+    <span class="nav-icon">🏋️</span>Treinos de Força
+  </button>
+  <button class="nav-btn" id="nav-aerobio" onclick="showSection('aerobio')">
+    <span class="nav-icon">🏃</span>Aeróbio
+  </button>
+  <button class="nav-btn" id="nav-saiba" onclick="showSection('saiba')">
+    <span class="nav-icon">📝</span>Saiba mais
+  </button>
+  <button class="nav-btn" id="nav-volume" onclick="showSection('volume')">
+    <span class="nav-icon">🎯</span>Volume
+  </button>
+</div>
+<script type="module">
+
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBhjBzIbImhwdiZMNzGjoZOaDhGTBZXVag",
+  authDomain: "consultoria-natan-gomes.firebaseapp.com",
+  projectId: "consultoria-natan-gomes",
+  storageBucket: "consultoria-natan-gomes.firebasestorage.app",
+  messagingSenderId: "214690482791",
+  appId: "1:214690482791:web:134090c538a93e8609e2c2"
+};
+const fbApp  = initializeApp(firebaseConfig);
+const auth   = getAuth(fbApp);
+const db     = getFirestore(fbApp);
+var _currentUser = null;
+
+// LOGIN
+document.getElementById('login-btn').addEventListener('click', async function() {
+  var email = document.getElementById('login-email').value.trim();
+  var pass  = document.getElementById('login-pass').value;
+  var errEl = document.getElementById('login-error');
+  errEl.textContent = '';
+  this.disabled = true;
+  this.textContent = 'Entrando...';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    errEl.textContent = 'E-mail ou senha incorretos.';
+    this.disabled = false;
+    this.textContent = 'Entrar';
+  }
+});
+
+document.getElementById('login-pass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+});
+
+// AUTH STATE
+onAuthStateChanged(auth, async function(user) {
+  if (user) {
+    _currentUser = user;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.querySelectorAll('.logout-btn-all').forEach(function(b){ b.style.display='inline-block'; });
+    await carregarTodasCargas();
+  } else {
+    _currentUser = null;
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.querySelectorAll('.logout-btn-all').forEach(function(b){ b.style.display='none'; });
+  }
+});
+
+// logout via window._fbSignOut chamado pelo onclick
+
+// SALVAR CARGA NO FIREBASE
+async function salvarCargaFirebase(exNome, carga) {
+  if (!_currentUser) return;
+  var uid  = _currentUser.uid;
+  var data = new Date().toLocaleDateString('pt-BR');
+  var ref  = doc(db, 'alunos', uid, 'cargas', exNome);
+  var snap = await getDoc(ref);
+  var hist = snap.exists() ? (snap.data().historico || []) : [];
+  hist.push({ data: data, carga: parseFloat(carga) || 0 });
+  if (hist.length > 10) hist = hist.slice(-10);
+  await setDoc(ref, { historico: hist, ultima: parseFloat(carga) || 0, nome: exNome });
+  localStorage.setItem('hist_' + exNome, JSON.stringify(hist));
+  localStorage.setItem('carga_' + exNome, carga);
+}
+
+// CARREGAR TODAS AS CARGAS
+async function carregarTodasCargas() {
+  if (!_currentUser) return;
+  var uid  = _currentUser.uid;
+  var col  = collection(db, 'alunos', uid, 'cargas');
+  var snap = await getDocs(col);
+  snap.forEach(function(docSnap) {
+    var exNome = docSnap.id;
+    var hist   = docSnap.data().historico || [];
+    var ultima = docSnap.data().ultima || 0;
+    localStorage.setItem('hist_' + exNome, JSON.stringify(hist));
+    localStorage.setItem('carga_' + exNome, ultima);
+  });
+  document.querySelectorAll('.p-carga-input, .carga-input').forEach(function(input) {
+    var ex    = input.dataset.ex;
+    var saved = localStorage.getItem('carga_' + ex);
+    if (saved !== null) input.value = saved;
+    renderHist(ex);
+  });
+}
+
+// // salvarCarga definida no script normal
+
+// Expor apenas funções Firebase para o escopo global
+window._fbSignOut          = function() { signOut(auth); };
+window._salvarCargaFirebase = salvarCargaFirebase;
+
+</script>
+<script>
+const ALUNO = "Marcelo Erigson";
+const WPP   = "5519994260534";
+
+function showSection(sec) {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('sec-'  + sec).classList.add('active');
+  document.getElementById('nav-'  + sec).classList.add('active');
+}
+
+function showTreino(label, btn) {
+  document.querySelectorAll('.treino-block').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('treino-' + label).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleEx(id) {
+  var card = document.getElementById('card-' + id);
+  card.classList.toggle('done');
+  var block = card.closest('.treino-block');
+  if (block) updateProgress(block.dataset.label);
+  checkFinish();
+}
+
+function checkFinish() {
+  var activeBlock = document.querySelector('.treino-block.active');
+  if (!activeBlock) return;
+  var total   = parseInt(activeBlock.dataset.total);
+  var checked = activeBlock.querySelectorAll('.ex-check:checked').length;
+  var label   = activeBlock.dataset.label;
+  var finishDiv = document.getElementById('finish-' + label);
+  if (checked === total && total > 0) {
+    finishDiv.style.display = 'block';
+    gerarResumoFinish(label, activeBlock);
+  } else {
+    finishDiv.style.display = 'none';
+  }
+}
+
+function gerarResumoFinish(label, block) {
+  var inputs   = block.querySelectorAll('.p-carga-input');
+  var evoluiu  = 0, manteve = 0, regrediu = 0;
+  inputs.forEach(function(input) {
+    var ex       = input.dataset.ex;
+    var atual    = parseFloat(input.value) || 0;
+    var hist     = JSON.parse(localStorage.getItem('hist_' + ex) || '[]');
+    var anterior = hist.length > 0 ? hist[hist.length - 1].carga : 0;
+    if (atual > anterior)      evoluiu++;
+    else if (atual < anterior) regrediu++;
+    else                       manteve++;
+  });
+  var sub = document.getElementById('finish-sub-' + label);
+  sub.innerHTML = evoluiu + ' series evoluiram | ' + manteve + ' mantiveram | ' + regrediu + ' regrediram';
+}
+
+function finalizarTreino(label) {
+  var block  = document.getElementById('treino-' + label);
+  var inputs = block.querySelectorAll('.p-carga-input');
+  var data   = new Date().toLocaleDateString('pt-BR');
+  var hora   = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+  var sessao = data + ' ' + hora;
+  inputs.forEach(function(input) {
+    var ex    = input.dataset.ex;
+    var carga = parseFloat(input.value) || 0;
+    var hist  = JSON.parse(localStorage.getItem('hist_' + ex) || '[]');
+    hist.push({ data: sessao, carga: carga });
+    if (hist.length > 10) hist.shift();
+    localStorage.setItem('hist_' + ex, JSON.stringify(hist));
+  });
+  localStorage.setItem('last_treino_' + label, data);
+  loadLastDate(label);
+  var btn = document.querySelector('#finish-' + label + ' .finish-btn');
+  btn.innerText = 'Salvo!';
+  btn.style.background = '#27AE60';
+  btn.disabled = true;
+}
+
+function enviarWhatsapp(label) {
+  var block  = document.getElementById('treino-' + label);
+  var inputs = block.querySelectorAll('.p-carga-input');
+  var data   = new Date().toLocaleDateString('pt-BR');
+  var linhas = [];
+  var evoluiu = 0, manteve = 0, regrediu = 0;
+  inputs.forEach(function(input) {
+    var ex        = input.dataset.ex;
+    var atual     = parseFloat(input.value) || 0;
+    var hist      = JSON.parse(localStorage.getItem('hist_' + ex) || '[]');
+    var anterior  = hist.length > 1 ? hist[hist.length - 2].carga : 0;
+    var diff = atual - anterior;
+    if (diff > 0) evoluiu++; else if (diff < 0) regrediu++; else manteve++;
+    linhas.push('- ' + ex + ': ' + atual + 'kg' + (diff !== 0 ? ' (' + (diff > 0 ? '+' : '') + diff + ')' : ''));
+  });
+  var nota = '';
+  var notaEl = document.getElementById('nota-' + label);
+  if (notaEl) nota = notaEl.value.trim();
+  var feedback = _feedbackMap[label] || '';
+  var feedbackTxt = feedback === 'facil' ? 'Facil (facinho!)' : feedback === 'ideal' ? 'Ideal (no ponto!)' : feedback === 'pesado' ? 'Pesado (destruiu!)' : '';
+  var tempoTxt = localStorage.getItem('tempo_treino_' + label) || '';
+  var msg = 'Treino ' + label + ' - ' + ALUNO + '\n' +
+            'Data: ' + data + '\n\n' +
+            'Cargas por serie:\n' + linhas.join('\n') + '\n\n' +
+            'Resultado: ' + evoluiu + ' evoluiram, ' + manteve + ' mantiveram, ' + regrediu + ' regrediram';
+  if (tempoTxt) msg += '\nDuracao: ' + tempoTxt;
+  if (feedbackTxt) msg += '\nIntensidade: ' + feedbackTxt;
+  if (nota) msg += '\nObs: ' + nota;
+  window.open('https://wa.me/' + WPP + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+function startTimer(seconds) {
+  if (seconds <= 0) return;
+  clearInterval(window._timerInt);
+  var float   = document.getElementById('timer-float');
+  var display = document.getElementById('timer-count');
+  float.style.display = 'flex';
+  var timeLeft = parseInt(seconds);
+  display.innerText = timeLeft;
+  window._timerInt = setInterval(function() {
+    timeLeft--;
+    display.innerText = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(window._timerInt);
+      float.style.display = 'none';
+      if (navigator.vibrate) navigator.vibrate(300);
+      alert('Descanso finalizado!');
+    }
+  }, 1000);
+}
+
+// salvarCarga definida no Firebase JS
+
+function renderHist(exNome, atualVal) {
+  var hist = JSON.parse(localStorage.getItem('hist_' + exNome) || '[]');
+  document.querySelectorAll('.p-carga-input[data-ex="' + exNome + '"]').forEach(function(inp) {
+    var card   = inp.closest('.ex-card');
+    var histEl = card ? card.querySelector('.hist-carga') : null;
+    if (!histEl || hist.length === 0) return;
+    var ultima = hist[hist.length - 1];
+    var atual  = atualVal !== undefined ? atualVal : parseFloat(inp.value) || 0;
+    var diff   = atual - ultima.carga;
+    var seta   = diff > 0 ? '▲' : diff < 0 ? '▼' : '=';
+    histEl.textContent = seta + ' ant: ' + ultima.carga + 'kg (' + ultima.data + ')';
+    histEl.className   = 'hist-carga ' + (diff > 0 ? 'up' : diff < 0 ? 'down' : '');
+  });
+}
+
+document.querySelectorAll('.p-carga-input').forEach(function(input) {
+  var ex     = input.dataset.ex;
+  var saved  = localStorage.getItem('carga_' + ex);
+  if (saved !== null) input.value = saved;
+  renderHist(ex);
+});
+
+
+
+// Expor funções para o escopo global
+window.toggleEx           = toggleEx;
+window.showTreino         = showTreino;
+window.showSection        = showSection;
+window.startTimer         = startTimer;
+window.tickSerie          = tickSerie;
+window.toggleSerie        = toggleSerie;
+window.finalizarTreino    = finalizarTreino;
+window.enviarWhatsapp     = enviarWhatsapp;
+window.compartilhar       = compartilhar;
+window.toggleTheme        = toggleTheme;
+window.abrirGrafico       = abrirGrafico;
+window.fecharGrafico      = fecharGrafico;
+window.selecionarFeedback = selecionarFeedback;
+window.toggleCronometro   = toggleCronometro;
+window.toggleSub          = toggleSub;
+window.pularDescanso      = pularDescanso;
+
+// SALVAR CARGA — chama Firebase via bridge
+function salvarCarga(input) {
+  var ex    = input.dataset.ex;
+  var carga = parseFloat(input.value) || 0;
+  localStorage.setItem('carga_' + ex, carga);
+  renderHist(ex, carga);
+  if (window._salvarCargaFirebase) window._salvarCargaFirebase(ex, carga);
+}
+
+// CRONÔMETRO DO TREINO — usa Date.now() para ser preciso mesmo com tela bloqueada
+var _treinoStartTime = null;
+var _treinoTimerInt  = null;
+var _treinoLabel     = null;
+var _feedbackMap     = {};
+
+function iniciarCronometro(label) {
+  // Salvar horário de início no localStorage para sobreviver a recargas
+  _treinoStartTime = Date.now();
+  localStorage.setItem('timer_start_' + label, _treinoStartTime);
+  _treinoLabel = label;
+  var btn = document.getElementById('btn-iniciar-' + label);
+  if (btn) { btn.textContent = '⏹ Parar'; btn.style.background = 'rgba(239,68,68,.2)'; btn.style.borderColor = '#ef4444'; }
+  document.getElementById('treino-timer').style.display = 'block';
+  clearInterval(_treinoTimerInt);
+  _treinoTimerInt = setInterval(function() {
+    // Calcular a partir do horário real — não acumula erro com bloqueio
+    var elapsed = Math.floor((Date.now() - _treinoStartTime) / 1000);
+    var m = Math.floor(elapsed / 60);
+    var s = elapsed % 60;
+    document.getElementById('treino-timer-val').textContent =
+      (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }, 1000);
+}
+
+function pararCronometro() {
+  clearInterval(_treinoTimerInt);
+  document.getElementById('treino-timer').style.display = 'none';
+  if (!_treinoStartTime) return '0min';
+  var elapsed = Math.floor((Date.now() - _treinoStartTime) / 1000);
+  var m = Math.floor(elapsed / 60);
+  var s = elapsed % 60;
+  _treinoStartTime = null;
+  if (_treinoLabel) localStorage.removeItem('timer_start_' + _treinoLabel);
+  return m + 'min ' + (s > 0 ? s + 's' : '');
+}
+
+function toggleCronometro(label) {
+  if (_treinoStartTime && _treinoLabel === label) {
+    pararCronometro();
+    var btn = document.getElementById('btn-iniciar-' + label);
+    if (btn) { btn.textContent = '▶ Iniciar Treino'; btn.style.background = ''; btn.style.borderColor = ''; }
+  } else {
+    iniciarCronometro(label);
+  }
+}
+
+// FEEDBACK DE INTENSIDADE
+function selecionarFeedback(label, tipo, btn) {
+  var row = btn.closest('.feedback-row');
+  row.querySelectorAll('.feedback-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  _feedbackMap[label] = tipo;
+}
+
+// GRÁFICO DE EVOLUÇÃO
+function abrirGrafico(exNome) {
+  var allDates = {};
+  for (var s = 1; s <= 4; s++) {
+    var key = exNome + '_s' + s;
+    var hist = JSON.parse(localStorage.getItem('hist_' + key) || '[]');
+    hist.forEach(function(h) {
+      var c = parseFloat(h.carga) || 0;
+      if (!allDates[h.data] || c > allDates[h.data]) {
+        allDates[h.data] = c;
+      }
+    });
+  }
+  var hist = Object.keys(allDates).map(function(d) { return { data: d, carga: allDates[d] }; });
+  hist.sort(function(a, b) { return a.data.localeCompare(b.data); });
+  document.getElementById('grafico-nome').textContent = exNome;
+  var barsEl  = document.getElementById('grafico-bars');
+  var emptyEl = document.getElementById('grafico-empty');
+  barsEl.innerHTML = '';
+  if (hist.length === 0) {
+    barsEl.style.display = 'none';
+    emptyEl.style.display = 'block';
+  } else {
+    barsEl.style.display = 'flex';
+    emptyEl.style.display = 'none';
+    var maxVal = Math.max.apply(null, hist.map(function(h) { return h.carga; })) || 1;
+    hist.slice(-8).forEach(function(h) {
+      var pct = Math.round((h.carga / maxVal) * 90) + 10;
+      var wrap = document.createElement('div');
+      wrap.className = 'grafico-bar-wrap';
+      wrap.innerHTML =
+        '<div class="grafico-val">' + h.carga + '</div>' +
+        '<div class="grafico-bar" style="height:' + pct + '%"></div>' +
+        '<div class="grafico-date">' + h.data + '</div>';
+      barsEl.appendChild(wrap);
+    });
+  }
+  document.getElementById('grafico-modal').classList.add('open');
+}
+
+function fecharGrafico() {
+  document.getElementById('grafico-modal').classList.remove('open');
+}
+document.getElementById('grafico-modal').addEventListener('click', function(e) {
+  if (e.target === this) fecharGrafico();
+});
+
+// PIRÂMIDE — marcar série individual (e disparar/resetar o descanso)
+function toggleSerie(checkbox, rowId, descanso) {
+  var row = document.getElementById(rowId);
+  if (row) row.classList.toggle('done-serie', checkbox.checked);
+  if (checkbox.checked) {
+    startTimer(descanso);
+  } else {
+    resetTimer();
+  }
+}
+
+// Zera e esconde a barra de descanso (usado ao desmarcar uma série)
+function resetTimer() {
+  clearInterval(window._timerInt);
+  var float   = document.getElementById('timer-float');
+  var display = document.getElementById('timer-count');
+  if (display) display.innerText = '0';
+  if (float) float.style.display = 'none';
+}
+
+// Pular o descanso — encerra a contagem na hora
+function pularDescanso() {
+  clearInterval(window._timerInt);
+  var float = document.getElementById('timer-float');
+  if (float) float.style.display = 'none';
+  if (navigator.vibrate) navigator.vibrate(50);
+}
+
+// TEMA CLARO/ESCURO
+function toggleTheme() {
+  var dark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+  document.getElementById('theme-btn').innerHTML = dark ? '&#9728;' : '&#127769;';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    var b = document.getElementById('theme-btn');
+    if (b) b.innerHTML = '&#9728;';
+  }
+})();
+
+// BARRA DE PROGRESSO
+function updateProgress(label) {
+  var block = document.getElementById('treino-' + label);
+  if (!block) return;
+  var total   = parseInt(block.dataset.total) || 0;
+  var checked = block.querySelectorAll('.ex-check:checked').length;
+  var pct     = total > 0 ? Math.round((checked / total) * 100) : 0;
+  var bar     = document.getElementById('prog-' + label);
+  if (bar) bar.style.width = pct + '%';
+}
+
+// DATA DO ÚLTIMO TREINO
+function loadLastDate(label) {
+  var date = localStorage.getItem('last_treino_' + label);
+  var el   = document.getElementById('last-date-' + label);
+  if (el && date) el.textContent = 'Ultimo treino: ' + date;
+}
+
+// CONTADOR DE SERIES
+function tickSerie(id, totalStr) {
+  var total  = parseInt(totalStr) || 4;
+  var el     = document.getElementById('sc-' + id);
+  if (!el) return;
+  var done   = parseInt(el.dataset.done) || 0;
+  done       = done >= total ? 0 : done + 1;
+  el.dataset.done = done;
+  var valEl  = document.getElementById('sc-val-' + id);
+  if (valEl) valEl.textContent = done + '/' + total;
+  var dotsEl = document.getElementById('sc-dots-' + id);
+  if (dotsEl) {
+    dotsEl.innerHTML = '';
+    for (var i = 0; i < total; i++) {
+      var d = document.createElement('div');
+      d.className = 'series-dot' + (i < done ? ' done' : '');
+      dotsEl.appendChild(d);
+    }
+  }
+}
+
+// COMPARTILHAR
+function compartilhar(label) {
+  if (navigator.share) {
+    navigator.share({ title: 'Treino ' + label, url: window.location.href }).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(window.location.href)
+      .then(function(){ alert('Link copiado!'); })
+      .catch(function(){ alert('Copie o link da barra de endereco.'); });
+  }
+}
+
+// TOGGLE SUBSTITUTO
+function toggleSub(id) {
+  var wrap = document.getElementById('sub-wrap-' + id);
+  var btn  = document.getElementById('btn-sub-' + id);
+  if (!wrap) return;
+  var visivel = wrap.style.display !== 'none' && wrap.style.display !== '';
+  wrap.style.display = visivel ? 'none' : 'block';
+  if (btn) btn.classList.toggle('ativo', !visivel);
+  if (!visivel) {
+    var input = wrap.querySelector('.carga-input');
+    if (input) {
+      var saved = localStorage.getItem('carga_' + input.dataset.ex);
+      if (saved !== null) input.value = saved;
+      renderHist(input.dataset.ex);
+    }
+  }
+}
+
+// OFFLINE
+window.addEventListener('online',  function() {
+  var b = document.getElementById('offline-banner');
+  if (b) b.style.display = 'none';
+});
+window.addEventListener('offline', function() {
+  var b = document.getElementById('offline-banner');
+  if (b) b.style.display = 'block';
+});
+
+// INIT — progresso e data de cada treino
+document.querySelectorAll('.treino-block').forEach(function(block) {
+  var label = block.dataset.label;
+  if (label) {
+    updateProgress(label);
+    loadLastDate(label);
+  }
+});
+
+
+
+</script>
+<div class="grafico-modal" id="grafico-modal">
+  <div class="grafico-box">
+    <div class="grafico-title">
+      EVOLUÇÃO DE CARGA
+      <span class="grafico-close" onclick="fecharGrafico()">✕</span>
+    </div>
+    <div id="grafico-nome" style="font-size:12px;color:var(--gray);margin-bottom:12px"></div>
+    <div class="grafico-bars" id="grafico-bars"></div>
+    <div id="grafico-empty" class="grafico-empty" style="display:none">Sem histórico ainda</div>
+  </div>
+</div>
+</body>
+</html>
